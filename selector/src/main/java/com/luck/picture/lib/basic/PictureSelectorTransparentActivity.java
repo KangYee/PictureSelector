@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -47,6 +48,7 @@ public class PictureSelectorTransparentActivity extends AppCompatActivity {
             setActivitySize();
         }
         setupFragment();
+        registerOnBackPressedDispatcher();
     }
 
     private void initSelectorConfig() {
@@ -107,6 +109,15 @@ public class PictureSelectorTransparentActivity extends AppCompatActivity {
             supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
         }
         FragmentInjectManager.injectSystemRoomFragment(supportFragmentManager, fragmentTag, targetFragment);
+    }
+
+    private void registerOnBackPressedDispatcher() {
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 
     @SuppressLint("RtlHardcoded")

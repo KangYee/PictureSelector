@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class PictureSelectorSupporterActivity extends AppCompatActivity {
         immersive();
         setContentView(R.layout.ps_activity_container);
         setupFragment();
+        registerOnBackPressedDispatcher();
     }
 
     private void initSelectorConfig() {
@@ -58,6 +60,15 @@ public class PictureSelectorSupporterActivity extends AppCompatActivity {
     private void setupFragment() {
         FragmentInjectManager.injectFragment(this, PictureSelectorFragment.TAG,
                 PictureSelectorFragment.newInstance());
+    }
+
+    private void registerOnBackPressedDispatcher() {
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 
     /**
