@@ -1,21 +1,25 @@
 package com.luck.picture.lib;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Service;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -247,6 +251,7 @@ public class PictureSelectorFragment extends PictureCommonFragment
         } else {
             requestLoadData();
         }
+        registerOnBackPressedDispatcher();
     }
 
 
@@ -1280,4 +1285,24 @@ public class PictureSelectorFragment extends PictureCommonFragment
             tvDataEmpty.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * 注册 OnBackPressedDispatcher
+     * 解决部分情况下侧滑返回时 Activity 没有被 finish
+     */
+    private void registerOnBackPressedDispatcher() {
+        FragmentActivity parentActivity = getActivity();
+        if (parentActivity == null) {
+            return;
+        }
+        parentActivity.getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        parentActivity.finish();
+                    }
+                }
+        );
+    }
+
 }

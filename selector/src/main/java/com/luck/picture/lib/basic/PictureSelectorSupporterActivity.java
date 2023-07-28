@@ -36,7 +36,7 @@ public class PictureSelectorSupporterActivity extends AppCompatActivity {
         immersive();
         setContentView(R.layout.ps_activity_container);
         setupFragment();
-        registerOnBackPressedDispatcher();
+        //registerOnBackPressedDispatcher();
     }
 
     private void initSelectorConfig() {
@@ -60,15 +60,6 @@ public class PictureSelectorSupporterActivity extends AppCompatActivity {
     private void setupFragment() {
         FragmentInjectManager.injectFragment(this, PictureSelectorFragment.TAG,
                 PictureSelectorFragment.newInstance());
-    }
-
-    private void registerOnBackPressedDispatcher() {
-        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                finish();
-            }
-        });
     }
 
     /**

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,11 +26,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -271,6 +274,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
             initComplete();
         }
         iniMagicalView();
+        registerOnBackPressedDispatcher();
     }
 
     /**
@@ -1730,5 +1734,25 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         super.onDestroy();
     }
 
+    /**
+     * 注册 OnBackPressedDispatcher
+     * 解决部分情况下侧滑返回时 Activity 没有被 finish
+     */
+    private void registerOnBackPressedDispatcher() {
+        FragmentActivity parentActivity = getActivity();
+        if (parentActivity == null) {
+            return;
+        }
+        Log.e(TAG, "registerOnBackPressedDispatcher");
+        parentActivity.getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        Log.e(TAG, "handleOnBackPressed");
+                        parentActivity.finish();
+                    }
+                }
+        );
+    }
 
 }
